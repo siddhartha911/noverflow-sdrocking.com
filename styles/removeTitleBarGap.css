@@ -1,5 +1,6 @@
-@media (-moz-windows-compositor) {
-  #main-window[tabsintitlebar=true]:not([inFullscreen=true]) .titlebar-placeholder[type="caption-buttons"] {
-    margin-left: 10px !important;
-  }
+@media ( -moz-windows-compositor ) {
+	#main-window[tabsintitlebar=true]:not ([inFullscreen=true] ) .titlebar-placeholder[type="caption-buttons"]
+		{
+		margin-left: 10px !important;
+	}
 }

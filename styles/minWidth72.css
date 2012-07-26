@@ -1,3 +1,3 @@
-.tabbrowser-tab:not([pinned=true])[fadein] {
-  min-width: 72px !important;
+.tabbrowser-tab:not ([pinned=true] )[fadein] {
+	min-width: 72px !important;
 }

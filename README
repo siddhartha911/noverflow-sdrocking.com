@@ -1,0 +1,6 @@
+Source code for Prevent Tab Overflow addon. In addition, ../scripts/helpers.js 
+and ../scripts/utils.js are also needed before packing this addon.
+
+AMO link: https://addons.mozilla.org/en-US/firefox/addon/noverflow/
+Short Description: Let your Firefox tabs shrink to a smaller size to make sure 
+	they are always visible. More features available from the Options page.

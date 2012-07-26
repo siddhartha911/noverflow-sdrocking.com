@@ -31,86 +31,100 @@
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
 
-let sss = Cc['@mozilla.org/content/style-sheet-service;1'].getService(Ci.nsIStyleSheetService);
-let ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+sss = Cc['@mozilla.org/content/style-sheet-service;1']
+		.getService(Ci.nsIStyleSheetService);
+ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
 
 var minWidth, tabClipWidth_o, tabsAnimate_o;
 
-/* Function adapted from the extension "Restartless Restart" by Eric Vold */
+/**
+ * Method to import other JS files; code adapted from the extension "Restartless
+ * Restart" by Eric Vold
+ */
 (function(global) global.include = function include(src) {
-  var o = {};
-  Cu.import("resource://gre/modules/Services.jsm", o);
-  var uri = o.Services.io.newURI(src, null, o.Services.io.newURI(__SCRIPT_URI_SPEC__, null, null));
-  o.Services.scriptloader.loadSubScript(uri.spec, global);
+	var o = {};
+	Cu.import("resource://gre/modules/Services.jsm", o);
+	var uri = o.Services.io.newURI(src, null, o.Services.io.newURI(
+			__SCRIPT_URI_SPEC__, null, null));
+	o.Services.scriptloader.loadSubScript(uri.spec, global);
 })(this);
 
 include("scripts/utils.js");
 include("scripts/pref.js");
 include("scripts/helpers.js");
 
-/* Reads value of the pref tabMinWidth to minWidth; snaps to the nearest value in {36, 54, 72} */
+/**
+ * Reads value of the pref tabMinWidth; snaps to the nearest in {36, 54, 72}
+ */
 function readMinWidthPref() {
-  let prefVal = pref("tabMinWidth");
-  minWidth = (prefVal < 45) ? 36 : (prefVal < 64) ? 54 : 72;
+	prefVal = pref("tabMinWidth");
+	minWidth = (prefVal < 45) ? 36 : (prefVal < 64) ? 54 : 72;
 }
 
-/* Unload and reload stylesheet only if the snapped value changes */
+/**
+ * Unload and reload stylesheet only if the snapped value changes
+ */
 function reloadMinWidthSheet() {
-  let prevMinWidth = minWidth;
-  readMinWidthPref();
-  if(prevMinWidth != minWidth) {
-    loadSheet("styles/minWidth" + minWidth + ".css");
-    unloadSheet("styles/minWidth" + prevMinWidth + ".css");
-  }
+	var prevMinWidth = minWidth;
+	readMinWidthPref();
+	if (prevMinWidth != minWidth) {
+		loadSheet("styles/minWidth" + minWidth + ".css");
+		unloadSheet("styles/minWidth" + prevMinWidth + ".css");
+	}
 }
 
 function updatePrefs() {
-  tabClipWidth_o = Services.prefs.getIntPref("browser.tabs.tabClipWidth");
-  Services.prefs.setIntPref("browser.tabs.tabClipWidth", 100);
-  printToLog("browser.tabs.tabClipWidth is changed to 100");
+	tabClipWidth_o = Services.prefs.getIntPref("browser.tabs.tabClipWidth");
+	Services.prefs.setIntPref("browser.tabs.tabClipWidth", 100);
+	printToLog("browser.tabs.tabClipWidth is changed to 100");
 
-  tabsAnimate_o = Services.prefs.getBoolPref("browser.tabs.animate");
-  Services.prefs.setBoolPref("browser.tabs.animate", pref("animateTabOpenClose"));
-  printToLog("browser.tabs.animate is changed to " + pref("animateTabOpenClose"));
+	tabsAnimate_o = Services.prefs.getBoolPref("browser.tabs.animate");
+	Services.prefs.setBoolPref("browser.tabs.animate",
+			pref("animateTabOpenClose"));
+	printToLog("browser.tabs.animate is changed to "
+			+ pref("animateTabOpenClose"));
 
-  pref.observe(["animateTabOpenClose"], function() {
-    Services.prefs.setBoolPref("browser.tabs.animate", pref("animateTabOpenClose"));
-    printToLog("browser.tabs.animate is changed to " + pref("animateTabOpenClose"));
-  });
+	pref.observe([ "animateTabOpenClose" ], function() {
+		Services.prefs.setBoolPref("browser.tabs.animate",
+				pref("animateTabOpenClose"));
+		printToLog("browser.tabs.animate is changed to "
+				+ pref("animateTabOpenClose"));
+	});
 }
 
 function resetPrefs() {
-  Services.prefs.setIntPref("browser.tabs.tabClipWidth", tabClipWidth_o);
-  Services.prefs.setBoolPref("browser.tabs.animate", tabsAnimate_o);
+	Services.prefs.setIntPref("browser.tabs.tabClipWidth", tabClipWidth_o);
+	Services.prefs.setBoolPref("browser.tabs.animate", tabsAnimate_o);
 }
 
 function startup(data, reason) {
-  initAddonNameAsync(data);
-  printToLog("startup(tabMinWidth=" + pref("tabMinWidth") + ", hideBlankFavicon=" 
-    + pref("hideBlankFavicon") + ", hideCloseBtn=" + pref("hideCloseBtn") + ", slimmerPinnedTabs=" 
-    + pref("slimmerPinnedTabs") + ", removeTitleBarGap=" + pref("removeTitleBarGap") 
-    + ", animateTabOpenClose=" + pref("animateTabOpenClose") + ")");
+	initAddonNameAsync(data);
+	printToLog("startup(tabMinWidth=" + pref("tabMinWidth")
+			+ ", hideBlankFavicon=" + pref("hideBlankFavicon")
+			+ ", hideCloseBtn=" + pref("hideCloseBtn") + ", slimmerPinnedTabs="
+			+ pref("slimmerPinnedTabs") + ", removeTitleBarGap="
+			+ pref("removeTitleBarGap") + ", animateTabOpenClose="
+			+ pref("animateTabOpenClose") + ")");
 
-  reloadMinWidthSheet();
-  pref.observe(["tabMinWidth"], 
-    reloadMinWidthSheet
-  );
+	reloadMinWidthSheet();
+	pref.observe([ "tabMinWidth" ], reloadMinWidthSheet);
 
-  loadAndObserve("hideBlankFavicon", "styles/hideBlankFavicon.css");
-  loadAndObserve("hideCloseBtn", "styles/hideCloseBtn.css");
-  loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
-  loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
+	loadAndObserve("hideBlankFavicon", "styles/hideBlankFavicon.css");
+	loadAndObserve("hideCloseBtn", "styles/hideCloseBtn.css");
+	loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
+	loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
 
-  updatePrefs();
+	updatePrefs();
 }
 
 function shutdown(data, reason) {
-  resetPrefs();
+	resetPrefs();
 
-  if(reason == APP_SHUTDOWN)  return;
+	if (reason == APP_SHUTDOWN)
+		return;
 
-  unloadSheet("styles/minWidth" + minWidth + ".css");
-  unload();
+	unloadSheet("styles/minWidth" + minWidth + ".css");
+	unload();
 }
 
 function install() {}
