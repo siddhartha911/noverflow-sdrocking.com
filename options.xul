@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<box xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <setting pref="extensions.NOverflow.tabMinWidth" title="Choose a minimum width for tabs" type="radio">
+    <radiogroup>
+      <radio value="36" label="Compact (36px)"/>
+      <radio value="54" label="Normal (54px)"/>
+      <radio value="72" label="Wide (72px)"/>
+    </radiogroup>
+    The default value in Firefox is 100px
+  </setting>
+
+  <setting pref="extensions.NOverflow.animateTabOpenClose" type="bool" title="Animate when opening/closing tabs">
+    Disable to make tab resizing quicker
+  </setting>
+
+  <setting pref="extensions.NOverflow.hideBlankFavicon" type="bool" title="Hide blank favicons from tabs"/>
+
+  <setting pref="extensions.NOverflow.hideCloseBtn" type="bool" title="Hide close button from the active tab">
+    Will again be visible on hovering
+  </setting>
+
+  <setting pref="extensions.NOverflow.slimmerPinnedTabs" type="bool" title="Use slimmer pinned tabs">
+    DO NOT modify during tab overflow
+  </setting>
+
+</box>

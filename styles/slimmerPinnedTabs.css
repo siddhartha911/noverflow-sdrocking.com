@@ -1,0 +1,5 @@
+.tabbrowser-tab[pinned=true] .tab-throbber, 
+.tabbrowser-tab[pinned=true] .tab-icon-image {
+  margin-left: 1px !important;
+  margin-right: 1px !important;
+}
