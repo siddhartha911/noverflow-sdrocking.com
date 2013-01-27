@@ -29,4 +29,9 @@
 		DO NOT modify during tab overflow
 	</setting>
 
+	<setting pref="extensions.NOverflow.reduceButtonWidth" type="bool"
+		title="Reduce width of the Firefox button">
+		Resize window if tabs don't adjust automatically  
+	</setting>
+
 </box>

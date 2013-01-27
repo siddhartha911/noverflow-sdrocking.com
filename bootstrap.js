@@ -104,7 +104,8 @@ function startup(data, reason) {
 			+ ", hideCloseBtn=" + pref("hideCloseBtn") + ", slimmerPinnedTabs="
 			+ pref("slimmerPinnedTabs") + ", removeTitleBarGap="
 			+ pref("removeTitleBarGap") + ", animateTabOpenClose="
-			+ pref("animateTabOpenClose") + ")");
+			+ pref("animateTabOpenClose") + ", reduceButtonWidth="
+			+ pref("reduceButtonWidth") + ")");
 
 	reloadMinWidthSheet();
 	pref.observe([ "tabMinWidth" ], reloadMinWidthSheet);
@@ -113,6 +114,7 @@ function startup(data, reason) {
 	loadAndObserve("hideCloseBtn", "styles/hideCloseBtn.css");
 	loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
 	loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
+	loadAndObserve("reduceButtonWidth", "styles/reduceButtonWidth.css");
 
 	updatePrefs();
 }
