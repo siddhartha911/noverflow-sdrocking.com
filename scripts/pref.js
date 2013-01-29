@@ -64,7 +64,8 @@ pref.defaults = {
   removeTitleBarGap: true,
   slimmerPinnedTabs: false,
   animateTabOpenClose: false,
-  reduceButtonWidth: true,
+  reduceButtonWidth: false,
+  dimPendingTabs: true,
   loggingEnabled: false
 };
 

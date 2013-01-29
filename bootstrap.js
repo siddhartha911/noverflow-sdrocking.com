@@ -101,11 +101,12 @@ function startup(data, reason) {
 	initAddonNameAsync(data);
 	printToLog("startup(tabMinWidth=" + pref("tabMinWidth")
 			+ ", hideBlankFavicon=" + pref("hideBlankFavicon")
-			+ ", hideCloseBtn=" + pref("hideCloseBtn") + ", slimmerPinnedTabs="
-			+ pref("slimmerPinnedTabs") + ", removeTitleBarGap="
-			+ pref("removeTitleBarGap") + ", animateTabOpenClose="
-			+ pref("animateTabOpenClose") + ", reduceButtonWidth="
-			+ pref("reduceButtonWidth") + ")");
+			+ ", hideCloseBtn=" + pref("hideCloseBtn")
+			+ ", slimmerPinnedTabs=" + pref("slimmerPinnedTabs")
+			+ ", removeTitleBarGap=" + pref("removeTitleBarGap")
+			+ ", animateTabOpenClose=" + pref("animateTabOpenClose")
+			+ ", reduceButtonWidth=" + pref("reduceButtonWidth")
+			+ ", dimPendingTabs=" + pref("dimPendingTabs") + ")");
 
 	reloadMinWidthSheet();
 	pref.observe([ "tabMinWidth" ], reloadMinWidthSheet);
@@ -115,6 +116,7 @@ function startup(data, reason) {
 	loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
 	loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
 	loadAndObserve("reduceButtonWidth", "styles/reduceButtonWidth.css");
+	loadAndObserve("dimPendingTabs", "styles/dimPendingTabs.css");
 
 	updatePrefs();
 }

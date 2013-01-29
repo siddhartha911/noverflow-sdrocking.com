@@ -8,7 +8,7 @@
 		</description>
 		<homepageURL>https://addons.mozilla.org/en-US/firefox/addon/noverflow/
 		</homepageURL>
-		<version>5.0</version>
+		<version>5.1</version>
 
 		<bootstrap>true</bootstrap>
 		<type>2</type>

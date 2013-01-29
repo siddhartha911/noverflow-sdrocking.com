@@ -1,0 +1,8 @@
+.tabbrowser-tab[pending] {
+	opacity: 0.65;
+	text-decoration: underline;
+}
+
+.tabbrowser-tab[pending]:hover {
+	opacity: 0.85 !important;
+}

@@ -34,4 +34,7 @@
 		Resize window if tabs don't adjust automatically  
 	</setting>
 
+	<setting pref="extensions.NOverflow.dimPendingTabs" type="bool"
+		title="Dim tabs that haven't loaded" />
+
 </box>
