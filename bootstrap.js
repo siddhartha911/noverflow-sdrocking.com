@@ -28,36 +28,43 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
+var Cc = Components.classes, Ci = Components.interfaces, Cu = Components.utils;
 Cu.import("resource://gre/modules/Services.jsm");
 
-sss = Cc['@mozilla.org/content/style-sheet-service;1']
-		.getService(Ci.nsIStyleSheetService);
-ios = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+var PREF_ROOT = "extensions.NOverflow.";
+var PREF_DEFAULTS = {
+	tabMinWidth : 54,
+	hideBlankFavicon : true,
+	hideCloseBtn : false,
+	removeTitleBarGap : true,
+	slimmerPinnedTabs : false,
+	animateTabOpenClose : false,
+	reduceButtonWidth : true,
+	dimPendingTabs : true,
+	loggingEnabled : false
+};
 
-var minWidth, tabClipWidth_o, tabsAnimate_o;
-
-/**
- * Method to import other JS files; code adapted from the extension "Restartless
- * Restart" by Eric Vold
- */
-(function(global) global.include = function include(src) {
+function include(src) {
 	var o = {};
 	Cu.import("resource://gre/modules/Services.jsm", o);
 	var uri = o.Services.io.newURI(src, null, o.Services.io.newURI(
 			__SCRIPT_URI_SPEC__, null, null));
-	o.Services.scriptloader.loadSubScript(uri.spec, global);
-})(this);
+	o.Services.scriptloader.loadSubScript(uri.spec, this);
+}
 
 include("scripts/utils.js");
 include("scripts/pref.js");
 include("scripts/helpers.js");
 
+initDefaultPrefs(PREF_ROOT, PREF_DEFAULTS, true);
+
+var minWidth, tabClipWidth_o, tabsAnimate_o;
+
 /**
  * Reads value of the pref tabMinWidth; snaps to the nearest in {36, 54, 72}
  */
 function readMinWidthPref() {
-	prefVal = pref("tabMinWidth");
+	prefVal = prefValue("tabMinWidth");
 	minWidth = (prefVal < 45) ? 36 : (prefVal < 64) ? 54 : 72;
 }
 
@@ -80,15 +87,15 @@ function updatePrefs() {
 
 	tabsAnimate_o = Services.prefs.getBoolPref("browser.tabs.animate");
 	Services.prefs.setBoolPref("browser.tabs.animate",
-			pref("animateTabOpenClose"));
+			prefValue("animateTabOpenClose"));
 	printToLog("browser.tabs.animate is changed to "
-			+ pref("animateTabOpenClose"));
+			+ prefValue("animateTabOpenClose"));
 
-	pref.observe([ "animateTabOpenClose" ], function() {
+	prefObserve([ "animateTabOpenClose" ], function() {
 		Services.prefs.setBoolPref("browser.tabs.animate",
-				pref("animateTabOpenClose"));
+				prefValue("animateTabOpenClose"));
 		printToLog("browser.tabs.animate is changed to "
-				+ pref("animateTabOpenClose"));
+				+ prefValue("animateTabOpenClose"));
 	});
 }
 
@@ -97,25 +104,38 @@ function resetPrefs() {
 	Services.prefs.setBoolPref("browser.tabs.animate", tabsAnimate_o);
 }
 
+/**
+ * Adjust tab position to fit with the adjusted Firefox button.
+ */
+function fixTabPositioning() {
+	if (Services.prefs.getBoolPref("browser.tabs.onTop")) {
+		Services.prefs.setBoolPref("browser.tabs.onTop", false);
+		Services.prefs.setBoolPref("browser.tabs.onTop", true);
+		printToLog("Fixed tab positioning.");
+	}
+}
+
 function startup(data, reason) {
 	initAddonNameAsync(data);
-	printToLog("startup(tabMinWidth=" + pref("tabMinWidth")
-			+ ", hideBlankFavicon=" + pref("hideBlankFavicon")
-			+ ", hideCloseBtn=" + pref("hideCloseBtn")
-			+ ", slimmerPinnedTabs=" + pref("slimmerPinnedTabs")
-			+ ", removeTitleBarGap=" + pref("removeTitleBarGap")
-			+ ", animateTabOpenClose=" + pref("animateTabOpenClose")
-			+ ", reduceButtonWidth=" + pref("reduceButtonWidth")
-			+ ", dimPendingTabs=" + pref("dimPendingTabs") + ")");
+	printToLog("startup(tabMinWidth=" + prefValue("tabMinWidth")
+			+ ", hideBlankFavicon=" + prefValue("hideBlankFavicon")
+			+ ", hideCloseBtn=" + prefValue("hideCloseBtn")
+			+ ", slimmerPinnedTabs=" + prefValue("slimmerPinnedTabs")
+			+ ", removeTitleBarGap=" + prefValue("removeTitleBarGap")
+			+ ", animateTabOpenClose=" + prefValue("animateTabOpenClose")
+			+ ", reduceButtonWidth=" + prefValue("reduceButtonWidth")
+			+ ", dimPendingTabs=" + prefValue("dimPendingTabs") + ")");
 
 	reloadMinWidthSheet();
-	pref.observe([ "tabMinWidth" ], reloadMinWidthSheet);
+	prefObserve([ "tabMinWidth" ], reloadMinWidthSheet);
 
 	loadAndObserve("hideBlankFavicon", "styles/hideBlankFavicon.css");
 	loadAndObserve("hideCloseBtn", "styles/hideCloseBtn.css");
 	loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
 	loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
-	loadAndObserve("reduceButtonWidth", "styles/reduceButtonWidth.css");
+	loadAndObserve("reduceButtonWidth", "styles/reduceButtonWidth.css",
+			fixTabPositioning);
+	fixTabPositioning();
 	loadAndObserve("dimPendingTabs", "styles/dimPendingTabs.css");
 
 	updatePrefs();
@@ -129,7 +149,10 @@ function shutdown(data, reason) {
 
 	unloadSheet("styles/minWidth" + minWidth + ".css");
 	unload();
+	fixTabPositioning();
 }
 
-function install() {}
-function uninstall() {}
+function install() {
+}
+function uninstall() {
+}

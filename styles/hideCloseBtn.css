@@ -2,7 +2,7 @@
 	visibility: collapse !important;
 }
 
-/* During oveflow, if favicon is blank, show close button to prevent tab height from reducing */
+/* During overflow, if favicon is blank, show close button to prevent tab height from reducing */
 .tabbrowser-tabs[overflow=true] .tabbrowser-tab[selected=true]:not(:hover) .tab-icon-image:not([src]) ~ .tab-close-button {
 	visibility: visible !important;
 }
