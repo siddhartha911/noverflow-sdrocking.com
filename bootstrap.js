@@ -41,6 +41,7 @@ var PREF_DEFAULTS = {
 	animateTabOpenClose : false,
 	reduceButtonWidth : true,
 	dimPendingTabs : true,
+	shrinkAustralisTabs: false,
 	loggingEnabled : false
 };
 
@@ -124,7 +125,8 @@ function startup(data, reason) {
 			+ ", removeTitleBarGap=" + prefValue("removeTitleBarGap")
 			+ ", animateTabOpenClose=" + prefValue("animateTabOpenClose")
 			+ ", reduceButtonWidth=" + prefValue("reduceButtonWidth")
-			+ ", dimPendingTabs=" + prefValue("dimPendingTabs") + ")");
+			+ ", dimPendingTabs=" + prefValue("dimPendingTabs")
+			+ ", shrinkAustralisTabs=" + prefValue("shrinkAustralisTabs") + ")");
 
 	reloadMinWidthSheet();
 	prefObserve([ "tabMinWidth" ], reloadMinWidthSheet);
@@ -137,6 +139,7 @@ function startup(data, reason) {
 			fixTabPositioning);
 	fixTabPositioning();
 	loadAndObserve("dimPendingTabs", "styles/dimPendingTabs.css");
+	loadAndObserve("shrinkAustralisTabs", "styles/australisStyling.css");
 
 	updatePrefs();
 }

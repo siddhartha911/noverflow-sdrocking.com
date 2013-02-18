@@ -5,10 +5,10 @@
 		type="radio">
 		<radiogroup>
 			<radio value="36" label="Compact (36px)" />
-			<radio value="54" label="Normal (54px)" />
+			<radio value="54" label="Recommended (54px)" />
 			<radio value="72" label="Wide (72px)" />
 		</radiogroup>
-		The default value in Firefox is 100px
+		The default min-width is 100px.
 	</setting>
 
 	<setting pref="extensions.NOverflow.hideBlankFavicon" type="bool"
@@ -21,19 +21,24 @@
 	<setting pref="extensions.NOverflow.dimPendingTabs" type="bool"
 		title="Dim tabs that haven't loaded" />
 
+	<setting pref="extensions.NOverflow.shrinkAustralisTabs" type="bool"
+		title="Reduce size of Australis tabs">
+		Use only with Australis (Firefox 22 and above) 
+	</setting>
+
 	<setting pref="extensions.NOverflow.animateTabOpenClose" type="bool"
 		title="Animate when opening/closing tabs">
-		Disable to make tab resizing quicker
+		Un-tick to make tabs resize quicker
 	</setting>
 
 	<setting pref="extensions.NOverflow.hideCloseBtn" type="bool"
-		title="Hide close button from the active tab">
-		Will be visible again on hover
+		title="Hide tab close buttons until hovered">
+		Use entire tab width for title [parity-IE]
 	</setting>
 
 	<setting pref="extensions.NOverflow.slimmerPinnedTabs" type="bool"
 		title="Use slimmer pinned tabs">
-		DO NOT modify during tab overflow
+		Don't modify during overflow. Don't use with Australis.
 	</setting>
 
 </box>
