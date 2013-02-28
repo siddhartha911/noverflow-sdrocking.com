@@ -33,7 +33,7 @@ Cu.import("resource://gre/modules/Services.jsm");
 
 var PREF_ROOT = "extensions.NOverflow.";
 var PREF_DEFAULTS = {
-	tabMinWidth : 54,
+	tabMinWidth : 55,
 	hideBlankFavicon : true,
 	hideCloseBtn : false,
 	removeTitleBarGap : true,
@@ -62,11 +62,11 @@ initDefaultPrefs(PREF_ROOT, PREF_DEFAULTS, true);
 var minWidth, tabClipWidth_o, tabsAnimate_o;
 
 /**
- * Reads value of the pref tabMinWidth; snaps to the nearest in {36, 54, 72}
+ * Reads value of the pref tabMinWidth; snaps to the nearest in {40, 55, 70}
  */
 function readMinWidthPref() {
 	prefVal = prefValue("tabMinWidth");
-	minWidth = (prefVal < 45) ? 36 : (prefVal < 64) ? 54 : 72;
+	minWidth = (prefVal < 47) ? "Compact" : (prefVal < 62) ? "Default" : (prefVal < 100) ? "Wide" : "";
 }
 
 /**
@@ -76,8 +76,10 @@ function reloadMinWidthSheet() {
 	var prevMinWidth = minWidth;
 	readMinWidthPref();
 	if (prevMinWidth != minWidth) {
-		loadSheet("styles/minWidth" + minWidth + ".css");
-		unloadSheet("styles/minWidth" + prevMinWidth + ".css");
+		if (minWidth != "")
+			loadSheet("styles/minWidth" + minWidth + ".css");
+		if (prevMinWidth != "")
+			unloadSheet("styles/minWidth" + prevMinWidth + ".css");
 	}
 }
 

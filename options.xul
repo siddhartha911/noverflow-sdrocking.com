@@ -4,9 +4,9 @@
 	<setting pref="extensions.NOverflow.tabMinWidth" title="Choose a minimum width for tabs"
 		type="radio">
 		<radiogroup>
-			<radio value="36" label="Compact (36px)" />
-			<radio value="54" label="Recommended (54px)" />
-			<radio value="72" label="Wide (72px)" />
+			<radio value="40" label="Compact (40px)" />
+			<radio value="55" label="Recommended (55px)" />
+			<radio value="70" label="Wide (70px)" />
 		</radiogroup>
 		The default min-width is 100px.
 	</setting>
@@ -20,11 +20,6 @@
 
 	<setting pref="extensions.NOverflow.dimPendingTabs" type="bool"
 		title="Dim tabs that haven't loaded" />
-
-	<setting pref="extensions.NOverflow.shrinkAustralisTabs" type="bool"
-		title="Reduce size of Australis tabs">
-		Use only with Australis (Firefox 22 and above) 
-	</setting>
 
 	<setting pref="extensions.NOverflow.animateTabOpenClose" type="bool"
 		title="Animate when opening/closing tabs">
