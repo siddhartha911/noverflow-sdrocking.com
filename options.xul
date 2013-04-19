@@ -21,7 +21,7 @@
 	<setting pref="extensions.NOverflow.dimPendingTabs" type="bool"
 		title="Dim tabs that haven't loaded" />
 
-	<setting pref="extensions.NOverflow.animateTabOpenClose" type="bool"
+	<setting pref="browser.tabs.animate" type="bool"
 		title="Animate when opening/closing tabs">
 		Un-tick to make tabs resize quicker
 	</setting>
@@ -29,11 +29,6 @@
 	<setting pref="extensions.NOverflow.hideCloseBtn" type="bool"
 		title="Hide tab close buttons until hovered">
 		Use entire tab width for title [parity-IE]
-	</setting>
-
-	<setting pref="extensions.NOverflow.slimmerPinnedTabs" type="bool"
-		title="Use slimmer pinned tabs">
-		Don't modify during overflow. Don't use with Australis.
 	</setting>
 
 </box>

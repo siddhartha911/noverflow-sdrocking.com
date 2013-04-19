@@ -31,17 +31,20 @@
 var Cc = Components.classes, Ci = Components.interfaces, Cu = Components.utils;
 Cu.import("resource://gre/modules/Services.jsm");
 
+var appInfo = Cc["@mozilla.org/xre/app-info;1"]
+		.getService(Components.interfaces.nsIXULAppInfo);
+var versionChecker = Cc["@mozilla.org/xpcom/version-comparator;1"]
+		.getService(Components.interfaces.nsIVersionComparator);
+
 var PREF_ROOT = "extensions.NOverflow.";
 var PREF_DEFAULTS = {
 	tabMinWidth : 55,
 	hideBlankFavicon : true,
 	hideCloseBtn : false,
-	removeTitleBarGap : true,
 	slimmerPinnedTabs : false,
-	animateTabOpenClose : false,
 	reduceButtonWidth : true,
 	dimPendingTabs : true,
-	shrinkAustralisTabs: false,
+	shrinkAustralisTabs : false,
 	loggingEnabled : false
 };
 
@@ -57,55 +60,16 @@ include("scripts/utils.js");
 include("scripts/pref.js");
 include("scripts/helpers.js");
 
+/* Change defaults if running on Australis */
+if (Services.prefs.getCharPref("app.update.channel").indexOf("ux") != -1
+		|| versionChecker.compare(appInfo.version, "24.0") >= 0) {
+	Services.prefs.setBoolPref("services.sync.prefs.sync."
+			+ "extensions.NOverflow.shrinkAustralisTabs", false);
+	Services.prefs
+			.setBoolPref("extensions.NOverflow.shrinkAustralisTabs", true);
+}
+
 initDefaultPrefs(PREF_ROOT, PREF_DEFAULTS, true);
-
-var minWidth, tabClipWidth_o, tabsAnimate_o;
-
-/**
- * Reads value of the pref tabMinWidth; snaps to the nearest in {40, 55, 70}
- */
-function readMinWidthPref() {
-	prefVal = prefValue("tabMinWidth");
-	minWidth = (prefVal < 47) ? "Compact" : (prefVal < 62) ? "Default" : (prefVal < 100) ? "Wide" : "";
-}
-
-/**
- * Unload and reload stylesheet only if the snapped value changes
- */
-function reloadMinWidthSheet() {
-	var prevMinWidth = minWidth;
-	readMinWidthPref();
-	if (prevMinWidth != minWidth) {
-		if (minWidth != "")
-			loadSheet("styles/minWidth" + minWidth + ".css");
-		if (prevMinWidth != "")
-			unloadSheet("styles/minWidth" + prevMinWidth + ".css");
-	}
-}
-
-function updatePrefs() {
-	tabClipWidth_o = Services.prefs.getIntPref("browser.tabs.tabClipWidth");
-	Services.prefs.setIntPref("browser.tabs.tabClipWidth", 100);
-	printToLog("browser.tabs.tabClipWidth is changed to 100");
-
-	tabsAnimate_o = Services.prefs.getBoolPref("browser.tabs.animate");
-	Services.prefs.setBoolPref("browser.tabs.animate",
-			prefValue("animateTabOpenClose"));
-	printToLog("browser.tabs.animate is changed to "
-			+ prefValue("animateTabOpenClose"));
-
-	prefObserve([ "animateTabOpenClose" ], function() {
-		Services.prefs.setBoolPref("browser.tabs.animate",
-				prefValue("animateTabOpenClose"));
-		printToLog("browser.tabs.animate is changed to "
-				+ prefValue("animateTabOpenClose"));
-	});
-}
-
-function resetPrefs() {
-	Services.prefs.setIntPref("browser.tabs.tabClipWidth", tabClipWidth_o);
-	Services.prefs.setBoolPref("browser.tabs.animate", tabsAnimate_o);
-}
 
 /**
  * Adjust tab position to fit with the adjusted Firefox button.
@@ -118,43 +82,56 @@ function fixTabPositioning() {
 	}
 }
 
+function clearOldPrefs() {
+	Services.prefs.clearUserPref("services.sync.prefs.sync."
+			+ "extensions.NOverflow.removeTitleBarGap");
+	Services.prefs.clearUserPref("extensions.NOverflow.removeTitleBarGap");
+	Services.prefs.clearUserPref("services.sync.prefs.sync."
+			+ "extensions.NOverflow.animateTabOpenClose");
+	Services.prefs.clearUserPref("extensions.NOverflow.animateTabOpenClose");
+}
+
 function startup(data, reason) {
 	initAddonNameAsync(data);
 	printToLog("startup(tabMinWidth=" + prefValue("tabMinWidth")
 			+ ", hideBlankFavicon=" + prefValue("hideBlankFavicon")
 			+ ", hideCloseBtn=" + prefValue("hideCloseBtn")
 			+ ", slimmerPinnedTabs=" + prefValue("slimmerPinnedTabs")
-			+ ", removeTitleBarGap=" + prefValue("removeTitleBarGap")
-			+ ", animateTabOpenClose=" + prefValue("animateTabOpenClose")
 			+ ", reduceButtonWidth=" + prefValue("reduceButtonWidth")
 			+ ", dimPendingTabs=" + prefValue("dimPendingTabs")
 			+ ", shrinkAustralisTabs=" + prefValue("shrinkAustralisTabs") + ")");
 
-	reloadMinWidthSheet();
-	prefObserve([ "tabMinWidth" ], reloadMinWidthSheet);
+	loadSheet("styles/stylesheet.css");
+	unload(function() {
+		unloadSheet("styles/stylesheet.css");
+	});
 
-	loadAndObserve("hideBlankFavicon", "styles/hideBlankFavicon.css");
-	loadAndObserve("hideCloseBtn", "styles/hideCloseBtn.css");
-	loadAndObserve("removeTitleBarGap", "styles/removeTitleBarGap.css");
-	loadAndObserve("slimmerPinnedTabs", "styles/slimmerPinnedTabs.css");
-	loadAndObserve("reduceButtonWidth", "styles/reduceButtonWidth.css",
-			fixTabPositioning);
-	fixTabPositioning();
-	loadAndObserve("dimPendingTabs", "styles/dimPendingTabs.css");
-	loadAndObserve("shrinkAustralisTabs", "styles/australisStyling.css");
+	loadObsPrefWCallback("tabMinWidth", "tabbrowser-tabs", "tabMinWidth", null,
+			null, function() {
+				var prefVal = prefValue("tabMinWidth");
+				if (prefVal < 47)
+					return "compact";
+				if (prefVal < 62)
+					return "normal";
+				if (prefVal < 100)
+					return "wide";
+				return "default";
+			});
 
-	updatePrefs();
+	loadObsPrefWCallback("hideBlankFavicon", "tabbrowser-tabs");
+	loadObsPrefWCallback("hideCloseBtn", "tabbrowser-tabs");
+	loadObsPrefWCallback("slimmerPinnedTabs", "tabbrowser-tabs");
+	loadObsPrefWCallback("reduceButtonWidth", "appmenu-button",
+			"reduceButtonWidth", fixTabPositioning, fixTabPositioning);
+	loadObsPrefWCallback("dimPendingTabs", "tabbrowser-tabs");
+	loadObsPrefWCallback("shrinkAustralisTabs", "main-window");
+
+	clearOldPrefs();
 }
 
 function shutdown(data, reason) {
-	resetPrefs();
-
-	if (reason == APP_SHUTDOWN)
-		return;
-
-	unloadSheet("styles/minWidth" + minWidth + ".css");
-	unload();
-	fixTabPositioning();
+	if (reason != APP_SHUTDOWN)
+		unload();
 }
 
 function install() {

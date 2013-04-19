@@ -1,7 +1,0 @@
-.tabbrowser-tab:not([pinned=true]):not([busy]):not([progress]) .tab-icon-image:not([src]) {
-	visibility: collapse;
-}
-
-.tabbrowser-tab:not([pinned=true]):not([busy]):not([progress]) .tab-icon-image:not([src])  ~ .tab-label {
-	margin-left: 2px !important;
-}

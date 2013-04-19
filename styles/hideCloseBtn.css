@@ -1,5 +1,0 @@
-/* During overflow, if icon is blank, show close button to prevent tab height from reducing */
-#navigator-toolbox:not(:hover) .tabbrowser-tabs:not([overflow=true]) .tabbrowser-tab[selected=true] .tab-close-button,
-#navigator-toolbox:not(:hover) .tabbrowser-tabs[overflow=true] .tabbrowser-tab[selected=true] .tab-icon-image[src] ~ .tab-close-button {
-	visibility: collapse !important;
-}

@@ -1,0 +1,98 @@
+/* Reduce tab min-width */
+#tabbrowser-tabs[tabMinWidth="compact"] .tabbrowser-tab:not([pinned=true])[fadein] {
+	min-width: 40px !important;
+}
+
+#tabbrowser-tabs[tabMinWidth="normal"] .tabbrowser-tab:not([pinned=true])[fadein] {
+	min-width: 55px !important;
+}
+
+#tabbrowser-tabs[tabMinWidth="wide"] .tabbrowser-tab:not([pinned=true])[fadein] {
+	min-width: 70px !important;
+}
+
+/* Reduce Firefox button width */
+#appmenu-button[reduceButtonWidth=true] {
+	padding-left: 2px !important;
+	padding-right: 2px !important;
+	min-width: 48px !important;
+}
+
+#appmenu-button[reduceButtonWidth=true] .box-inherit,
+#appmenu-button[reduceButtonWidth=true] .button-menu-dropmarker {
+	margin-left: 2px !important;
+	margin-right: 2px !important;
+}
+
+/* Dim pending tabs */
+#tabbrowser-tabs[dimPendingTabs=true] .tabbrowser-tab[pending] {
+	opacity: 0.65;
+	text-decoration: underline;
+}
+
+#tabbrowser-tabs[dimPendingTabs=true] .tabbrowser-tab[pending]:hover {
+	opacity: 0.85 !important;
+}
+
+/* Hide tab close buttons */
+/* During overflow, if icon is blank, show close button to prevent tab height from reducing */
+#tabbrowser-tabs[hideCloseBtn=true]:not(:hover):not([overflow=true]) .tabbrowser-tab[selected=true] .tab-close-button,
+#tabbrowser-tabs[hideCloseBtn=true]:not(:hover)[overflow=true] .tabbrowser-tab[selected=true] .tab-icon-image[src] ~ .tab-close-button {
+	visibility: collapse !important;
+}
+
+/* Hide blank tab favicon */
+#tabbrowser-tabs[hideBlankFavicon=true] .tabbrowser-tab:not([pinned=true]):not([busy]):not([progress]) .tab-icon-image:not([src]) {
+	visibility: collapse;
+}
+
+#tabbrowser-tabs[hideBlankFavicon=true] .tabbrowser-tab:not([pinned=true]):not([busy]):not([progress]) .tab-icon-image:not([src])	~ .tab-label {
+	margin-left: 2px !important;
+}
+
+/* Slimmer pinned tabs */
+#tabbrowser-tabs[slimmerPinnedTabs=true] .tabbrowser-tab[pinned=true] .tab-throbber,
+#tabbrowser-tabs[slimmerPinnedTabs=true] .tabbrowser-tab[pinned=true] .tab-icon-image {
+	margin-left: 1px !important;
+	margin-right: 1px !important;
+}
+
+/* (Always) Reduce tab animation duration */
+.tabbrowser-tab:not([pinned]) {
+	transition: min-width 80ms ease-out,
+				max-width 120ms ease-out,
+				opacity 50ms ease-out 20ms !important;
+}
+
+.tabbrowser-tab:not([pinned]):not([fadein]) {
+	transition: min-width 80ms ease-out,
+				max-width 120ms ease-out,
+				opacity 50ms ease-out 60ms !important;
+}
+
+/* Shrink Australis tabs */
+#main-window[shrinkAustralisTabs=true] .tab-content[pinned] {
+	-moz-padding-start: 6px !important;
+	-moz-padding-end: 6px !important;
+}
+
+#main-window[shrinkAustralisTabs=true] .tab-content:not([pinned]) {
+	-moz-padding-start: 6px !important;
+	-moz-padding-end: 4px !important;
+}
+
+#main-window[shrinkAustralisTabs=true] .tab-throbber[pinned],
+#main-window[shrinkAustralisTabs=true] .tab-icon-image[pinned] {
+	-moz-margin-start: 2px !important;
+	-moz-margin-end: 2px !important;
+}
+
+#main-window[shrinkAustralisTabs=true] .tab-throbber:not([pinned]),
+#main-window[shrinkAustralisTabs=true] .tab-icon-image:not([pinned]) {
+	-moz-margin-end: 4px !important;
+}
+
+#main-window[shrinkAustralisTabs=true] .tab-close-button:not([pinned]) {
+	-moz-margin-start: 0px !important;
+}
+
