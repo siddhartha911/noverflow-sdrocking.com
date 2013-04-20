@@ -60,15 +60,6 @@ include("scripts/utils.js");
 include("scripts/pref.js");
 include("scripts/helpers.js");
 
-/* Change defaults if running on Australis */
-if (Services.prefs.getCharPref("app.update.channel").indexOf("ux") != -1
-		|| versionChecker.compare(appInfo.version, "24.0") >= 0) {
-	Services.prefs.setBoolPref("services.sync.prefs.sync."
-			+ "extensions.NOverflow.shrinkAustralisTabs", false);
-	Services.prefs
-			.setBoolPref("extensions.NOverflow.shrinkAustralisTabs", true);
-}
-
 initDefaultPrefs(PREF_ROOT, PREF_DEFAULTS, true);
 
 /**
